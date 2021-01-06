@@ -1,0 +1,182 @@
+\documentclass[12pt]{article}
+%\documentclass[preprint]{elsarticle}
+%%% Following line makes it easier for me to do editing on a ``big screen''
+%\addtolength{\voffset}{-1.5in}
+\voffset 0.0cm
+\topmargin 0.0cm
+\headheight 0.0cm
+\headsep 0.0cm
+\hoffset 0.0cm
+\textheight 9in
+\textwidth 6.5in
+\oddsidemargin 0.0cm
+
+%\usepackage{savetrees}
+\usepackage[dvips]{graphicx}
+\usepackage{verbatim}
+\usepackage[sumlimits,]{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{srcltx}
+\usepackage{bbm}
+\usepackage{algorithm,algorithmic}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{authblk}
+
+\usepackage{graphicx,epsfig}
+%\usepackage{subfigure}
+%\usepackage{amstext,amsmath,amssymb,amsfonts,amsthm,datetime}
+%\usepackage{times}
+%\usepackage{natbib}
+%\def\newblock{\hskip .11em plus .33em minus .07em}  %Use this with natbib to avoid a ``newbloc undefined'' error
+%\setlength\textwidth{37.2pc}
+%\setlength\textheight{58pc}
+%\setlength\topmargin{-30pt}
+%\addtolength\oddsidemargin{-1.2cm}
+%\addtolength\evensidemargin{-1.2cm}
+
+
+%%%Boldface and special characters%%%%%
+%%roman, boldface, cal
+\def \bfd { {\mathbf{d}}}
+\def \bfD { {\mathbf{D}}}
+\def \bft { {\mathbf{t}}}
+\def \bfx { {\mathbf{x}}}
+\def \bfX { {\mathbf{X}}}
+\def \calM { {\mathcal M}}
+\def \calA {\mathcal{A}}
+\def \calD {\mathcal{D}}
+\def \calK {\mathcal{K}}
+\def \calL {\mathcal{L}}
+\def \calN { {\mathcal N}}
+\def \calQ {\mathcal{Q}}
+\def \calR {\mathcal{R}}
+\def \calU { {\mathcal{U}}}
+\def \d { {\,\mbox{d}}}
+\def \dl { {\,\mbox{dl}}}
+\def \dP { {\,\rm{d}\rmP}}
+\def \dQ { {\,\mbox{dQ}}}
+\def \Pbar { {\overline{\rm{P}}}}
+\def \Q { {\mbox{Q}}}
+\def \dm { \, \mbox{d}m}
+\def \dq { \, \mbox{d}q}
+\def \ds { \,\mbox{d}s}
+\def \dt { \,\mbox{d}t}
+\def \du { \,\mbox{d}u}
+\def \dv { \,\mbox{d}v}
+\def \dw { \, \mbox{d}w}
+\def \dx { \, \mbox{d}x}
+\def \dy { \, \mbox{d}y}
+\def \dz { \,\mbox{d}z}
+\def \iid { {\mbox{i.i.d.}\,}}
+\def \rmP {\mathrm{P}}
+\def \supp { {\mbox{supp}}}
+\def \trace { {\mbox{Trace}}}
+\def \st {:\,}
+
+
+%%% common math-mode items %%%
+\def \as { {\emph{a.s.}}}
+\def \E { {\mathbb{E}}}
+\def \eps { {\varepsilon}}
+\def \indep { {\perp\!\!\!\perp}}
+\def \logit { {\mbox{logit}}}
+\def \one { \mathbf{1}}
+\def \what { {\hat w}}
+\def \xbar { {\bar x}}
+\def \xhat { {\hat x}}
+
+
+%%Operators operators commands
+\newcommand{\HRule}{\noindent\rule{\linewidth}{0.5mm}}
+\newcommand{\Cov}[2]{ \mbox{Cov}\left( #1,#2 \right) } 
+\newcommand{\CovP}[2]{ \mbox{Cov}_\rmP\left( #1,#2 \right) } 
+\newcommand{\Exp}[1]{ \E\left\{ #1 \right\} } 
+\newcommand{\ExpQ}[1]{ \E_Q\left\{ #1 \right\} } 
+\newcommand{\ExpP}[1]{ \E_\mathrm{P}\left\{ #1 \right\} } 
+\newcommand{\ip}[2]{ \langle #1,\,#2 \rangle}   %Mapping is ` i 
+\newcommand{\KL}[2]{ \mbox{KL}[#1 \,||\, #2]}   %Mapping is 
+\newcommand{\mean}[1]{ \langle #1 \rangle}      %Mapping is ` m
+\newcommand{\Var}[1]{ \mbox{Var}\left\{ #1 \right\} } 
+\newcommand{\VarP}[1]{ \mbox{Var}_\mathrm{P}\left\{ #1 \right\} } 
+\def \dint { \displaystyle\int}
+\def \g { {\,|\,}}
+\def \p {\partial}
+
+
+%%%%spaces such as R^n %%%
+\def \Nat {{\mathbb N}}
+\def \Rone { {{\mathbb R}}}
+\def \Rd { {{\mathbb R}^d}}
+\def \Rm {{\mathbb R}^m}
+\def \Rn { {{\mathbb R}^n}}
+\def \RN {{\mathbb R}^N}
+
+%%%%Theorem Environments%%%%%%%%%%%%%%
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem*{def*}{Definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{conditions}{Conditions}[section]
+\newtheorem{assumptions}{Assumptions}[section]
+
+\theoremstyle{remark}
+\newtheorem*{remark*}{Remark}
+\newtheorem{remark}{Remark}[section]
+\newtheorem{claim}{Claim}
+\newtheorem*{claim*}{Claim}
+
+
+\begin{document}
+\title{ROC Curves}
+%\author{Guillaume Bal\thanks{Department of Applied Physics and Applied Mathematics, Columbia University, 200 S.W. Mudd building, 500 W. 120th street, New York NY, 10027; 212-854-4731, gb2030@columbia.edu}, Ian Langmore \thanks{Corresponding author.  Department of Applied and Applied Mathematics, Columbia University, 200 S.W. Mudd building, 500 W. 120th street, New York NY, 10027; 415-272-6321, ianlangmore@gmail.com }, Youssef Marzouk\thanks{Dept. of Aeronautics and Astronautics, MIT}}
+%\author{
+% Ian Langmore,\thanks{Opera Solutions
+%    ianlangmore@gmail.com } 
+%    }
+\author[1]{Ian Langmore\thanks{ianlangmore@gmail.com}}
+%\author[1]{Ming Gu\thanks{mgu@operasolutions.com}}
+%\affil[1]{Global Market Analytics, Opera Solutions}
+\maketitle
+
+\tableofcontents
+\abstract{}
+
+
+\medskip
+
+
+\section{Notation}
+Following notation in \cite{FawROC}, we define $Y,N$ as the sets of outcomes that are predicted positive/negative, and $p, n$ as the outcomes that are positive/negative.
+
+
+\section{ROC for $-x$}
+Consider a logistic regression model that predicts the probability of $p$, as a function of $x$ as $\logit(x)$.  
+
+For every threshold level, the models with $x$ and $-x$ give opposite predictions.
+\begin{align*}
+  \rmP_x[Y\g p] &= 1 - \rmP_x[N\g p] = 1 - \rmP_{-x}[Y\g p]\\
+  \rmP_x[Y\g n] &= 1 - \rmP_x[N\g n] = 1 - \rmP_{-x}[Y\g n].
+\end{align*}
+The ROC curve of the $x$ model is the graph $(\rmP_{x}[Y\g p], \rmP_{x}[Y\g n]) = (w, f(w))$.  The ROC curve of the $-x$ model is the graph $(z, g(z))$.  The above equations show that
+\begin{align*}
+ w &= 1-z, \qquad f(w) = 1 - g(z) = 1 - g(1-w), 
+\end{align*}
+therefore
+\begin{align*}
+  AUC_x &= \int_0^1 f(w)\dw = \int_0^1 \left( 1 - g(1-w) \right)\dw = 1 - \int_0^1 g(1-w)\dw = 1 - \int_0^1 g(z)\dz\\
+  &= 1 - AUC_{-x}.
+\end{align*}
+ 
+\bibliographystyle{plain}
+\bibliography{../../../bibliography}
+
+\end{document}

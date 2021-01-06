@@ -1,0 +1,311 @@
+\documentclass[11pt,openany]{book}
+%\documentclass[11pt]{memoir}
+\usepackage{amsmath} %Never write a paper without using amsmath for its many new commands
+\usepackage{amssymb} %Some extra symbols
+\usepackage{makeidx} %If you want to generate an index, automatically
+\usepackage{graphicx} %If you want to include postscript graphics
+\usepackage{amsthm}
+% Added by Ian
+\usepackage{srcltx}
+\usepackage{parskip}
+\usepackage{minted}  % For syntax highlighting of code
+\usepackage{mdframed} % For framed boxes
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+% Added by Daniel
+\usepackage{enumitem}
+\usepackage{url} %for citing online publication in bib
+\usepackage{listings}
+\usepackage{pdfsync}  %for TexSync
+\synctex=1
+\usepackage[all]{xy} %for diagrams
+% Special modes
+%\includeonly{preface,unix,pythonpipeline,git,notation,linear,datawrangling} %If you just want to process one section
+%\includeonly{linear}
+%\includeonly{preface,unix,pythonpipeline,git,notation,linear,logistic, nlp, classification}
+%\includeonly{logistic}
+%\includeonly{linear}
+%\includeonly{notation,linear,logistic,classification}
+%\includeonly{classification}
+%\includeonly{linear}
+%\includeonly{performance}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% bold, bbold, cal, and roman characters
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def \bfd { {\mathbf{d}}}
+\def \bfD { {\mathbf{D}}}
+\def \x { {\mathbf{x}}}  % Cheat and leave out the bf for X, y
+\def \X { {\mathbf{X}}}  % Cheat and leave out the bf for X, y
+\def \y { {\mathbf{y}}}
+\def \bfz { {\mathbf{z}}}
+
+\def \calA {\mathcal{A}}
+\def \calD {\mathcal{D}}
+\def \calF { {\mathcal F}}
+\def \calK {\mathcal{K}}
+\def \calL {\mathcal{L}}
+\def \calM { {\mathcal M}}
+\def \calN { {\mathcal N}}
+\def \calQ {\mathcal{Q}}
+\def \calR {\mathcal{R}}
+\def \calU { \mathcal{U}}
+
+\def \d { {\mathbb{d}}}
+\def \dx { {\mathbb{dx}}}
+
+\def \rmP {\mathrm{P}}
+\def \rmQ { {\mathrm{Q}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% math-mode definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def \as { {\emph{a.s.}}}
+\def \dint { \displaystyle\int}
+
+% differentials
+\def \d { {\,\mbox{d}}}
+\def \dP { {\,\rm{d}\rmP}}
+\def \dPtilde { \,\mbox{d}\tilde{\mbox{P}}}
+\def \dQ { {\,\mbox{dQ}}}
+\def \Pbar { {\overline{\rm{P}}}}
+\def \ds { \,\mbox{d}s}
+\def \dt { \,\mbox{d}t}
+\def \dv { \,\mbox{d}v}
+\def \dw { \, \mbox{d}w}
+\def \dx { \, \mbox{d}x}
+\def \dy { \, \mbox{d}y}
+\def \dz { \,\mbox{d}z}
+
+\def \eps { {\epsilon}}
+\def \g { {\,|\,}}
+\def \iid { {\mbox{i.i.d.}\,}}
+\def \indep { {\perp\!\!\!\perp}}
+\def \logit { {\mbox{logit}}}
+\def \one { \mathbf{1}}
+\def \p {\partial}
+
+\def \supp { {\mbox{supp}}}
+\def \trace { {\mbox{Trace}}}
+\def \st {:\,}
+
+\def \ustar { {u^\ast}}
+\def \wstar { {w^\ast}}
+\def \xstar { {x^\ast}}
+\def \xtilde { {\tilde x}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% spaces such as R^n
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def \Cn {{\mathbb C}^n}
+\def \Cone {{\mathbb C}}
+\def \dsphere { {\mathbb{S}^{d-1}}}
+\def \nsphere { {\mathbb{S}^{n-1}}}
+\def \Nat {{\mathbb N}}
+\def \pR { {\p R}}
+\def \Rn { {{\mathbb R}^n}}
+\def \Rd { {{\mathbb R}^d}}
+\def \RK {{\mathbb R}^K}
+\def \RN {{\mathbb R}^N}
+\def \RNK {{\mathbb R}^{N\times K}}
+\def \Rm {{\mathbb R}^m}
+\def \Rone {{\mathbb R}}
+\def \Rtwo {{\mathbb R}^2}
+\def \Rthree {{\mathbb R}^3}
+\def \Rp { {\mathbb R}^p}
+\def \Sone {{\mathbb S}}
+\def \Zint {{\mathbb Z}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% operators and commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\HRule}{\noindent\rule{\linewidth}{0.5mm}}
+\newcommand{\Cov}[2]{ \mbox{Cov}\left( #1,#2 \right) }
+\newcommand{\CovP}[2]{ \mbox{Cov}_\rmP\left( #1,#2 \right) }
+\newcommand{\Exp}[1]{ \mathbb{E}\left\{ #1 \right\} }
+\newcommand{\ExpQ}[1]{ \E_Q\left\{ #1 \right\} }
+\newcommand{\ExpP}[1]{ \E_\mathrm{P}\left\{ #1 \right\} }
+\newcommand{\ip}[2]{ \langle #1,\,#2 \rangle}   %Mapping is ` i
+\newcommand{\KL}[2]{ \mbox{KL}[#1 \,||\, #2]}   %Mapping is
+\newcommand{\mean}[1]{ \langle #1 \rangle}      %Mapping is ` m
+\newcommand{\Var}[1]{ \mbox{Var}\left\{ #1 \right\} }
+\newcommand{\VarP}[1]{ \mbox{Var}_\mathrm{P}\left\{ #1 \right\} }
+\newcommand{\T}[1]{ \texttt{#1}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Theorem environments
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\theoremstyle{theorem}
+\newtheorem{theorem}[equation]{Theorem}
+
+\theoremstyle{plain}
+
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}[equation]
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{example}[equation]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[equation]{Remark}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Framed boxes using mdframed package
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mdfdefinestyle{theoremstyle}{%
+  linecolor=red,linewidth=2pt,%
+  frametitlerule=true,%
+  frametitlebackgroundcolor=gray!40,
+  innertopmargin=\topskip,
+}
+
+\definecolor{default}{rgb}{0.95,0.95,0.95}
+
+% Use \begin{digression}, \end{digression} to place a digression
+% Use digression* to turn off numbering
+\mdtheorem[style=theoremstyle]{digression}{Digression}
+
+
+
+
+
+\begin{document}
+
+
+\begin{titlepage}
+\begin{center}
+
+% Upper part of the page. The '~' is needed because \\
+% only works if a paragraph has started.
+\includegraphics[width=0.75\textwidth]{../images/kandinsky}
+
+%\textsc{\LARGE University of Beer}\\[1.5cm]
+
+%\textsc{\Large Final year project}\\[0.5cm]
+
+% Title
+\HRule \\[0.4cm]
+{ \Huge \bfseries Applied Data Science}\\[0.4cm]
+
+\HRule \\[1.5cm]
+
+\vspace{2in}
+{\LARGE \bfseries Ian Langmore \hfill Daniel Krasner}
+
+% Author and supervisor
+%\begin{minipage}{0.4\textwidth}
+%\begin{flushleft} \large
+%\emph{Author:}\\
+%John \textsc{Smith}
+%\end{flushleft}
+%\end{minipage}
+%\begin{minipage}{0.4\textwidth}
+%\begin{flushright} \large
+%\emph{Supervisor:} \\
+%Dr.~Mark \textsc{Brown}
+%\end{flushright}
+%\end{minipage}
+
+\vfill
+
+% Bottom of the page
+%{\large \today}
+
+
+\end{center}
+\end{titlepage}
+
+%\author{}
+%\title{Applied Data Science}
+%\includegraphics[width=0.5\textwidth]{../images/kandinsky}
+%\date{2013}
+%\maketitle
+
+\frontmatter
+\tableofcontents
+
+\include{preface}
+
+\mainmatter
+% \include{unix} means that unix.tex will be inserted verbatim into this file.
+\part{Programming Prerequisites}
+\include{unix}
+\include{git}
+\include{pythonpipeline}
+%\include{datawrangling}
+
+\part{The Classic Regression Models}
+\include{notation}  % only include once notation is settled
+\include{linear}
+\include{logistic}
+\include{models-behaving-well}
+
+\part{Text Data}
+\include{nlp}
+
+\part{Classification}
+\include{classification}
+
+\part{Extras}
+\include{performance}
+
+
+
+\backmatter
+\include{glossary}
+\include{notat}
+\bibliographystyle{amsalpha} %The style you want to use for references.
+\bibliography{../../bibliography}
+%\bibliography{mr,bibliography} %The files containing all the articles and books you ever referenced.
+\printindex %Make an index AUTOMATICALLY
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%   Notes that were in this template when I got it.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{chap1/sec12}
+When LaTeX sees a line like \input{chap1/sec11}, it looks for the file sec11.tex in the directory chap1 and inputs this file line by line into appdatasci.tex. (The file sec11.tex is the contents of my Section 1.1 of my book.) Again, don't use \begin{document} or \end{document}: sec11.tex should contain just the exposition of this section.
+
+Finally, a couple of comments about bibliographies. Especially near the start of your careers, when you start writing papers and theses, I advise you strongly to create a file called bibliography.bib which contains like this:
+
+
+@ARTICLE{EGG:96a, %A code of your own making by which you refer to this paper
+AUTHOR = "Edgar G. Goodaire and D. A. Robinson",
+TITLE = "A construction of loops which admit right alternative loop rings",
+JOURNAL = RESUM, %RESUM is defined in mr.bib; it expands to an official journal name
+YEAR = {1996},
+VOLUME = {59},
+PAGES = {56--62} }
+
+@UNPUBLISHED{EGG:98,
+AUTHOR = "Edgar G. Goodaire and D. A. Robinson",
+TITLE = "Commutative alternative rings: A construction",
+NOTE = "preprint"
+
+@BOOK{EGG:99a,
+AUTHOR = "Edgar G. Goodaire and Sean May and Maitreyi Raman",
+TITLE = "The {M}oufang Loops of Order less than $64$",
+PUBLISHER = "Nova Science Publishers, Inc.",
+ADDRESS = "Commack, New York",
+YEAR = {1999}
+Each time you want to reference something, if it is not in your bibliography.bib, you must add, with formatting as above. YOU DO THIS ONLY ONCE IN YOUR LIFE. Ever thereafter, if you want to reference Goodaire and Robinson in your paper, you write \cite{EGG:96a}. After you latex master.tex, you bibtex master.tex. At this point, the bibtex program will go into your bibliography.bib file and pull into your paper or book just those references which you require in your current work. Run latex master.tex once (or twice) more and look at the output. Your references will be numbered and alphabetized automatically and all the references in your exposition will be just as you want them.
+
+The file mr.bib is a short version of mrabbrev.bib, which is available from the AMS (if it isn't on our own systems). It's a list of all official abbreviations for journals and is invaluable.
+The command \bibliographstyle{amsalpha} asks bibtex to use the amsalpha style. There are numerous other possibilities. Many book publishers have their own. There is much much more to all this than I can outline here. I do urge you, however, to read the sections in Lamport's book which deal with bibliographies (and making your index). Good luck.

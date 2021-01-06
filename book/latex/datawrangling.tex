@@ -1,0 +1,440 @@
+\chapter{Data Wrangling}
+\label{chapter:datawrangling}
+\vspace{0.2in}
+
+\section{Introduction}
+One of the most surprisingly important skills in applied data science is the ability to wrangle data. Before we can look for patterns in the data, we often must turn unstructured or semi-structured data into structured forms. Before we can estimate model parameters, we almost always need to clean-up dirty data and deal with missing or partial observations. In many real-world applications, being able to effective work with data and turn it into the right form is critical to success. In this chapter we will briefly review essential scientific Python tools used in traditional numerical processing. We will then focus on an introduction to several classes of data operations commonly used in practical data science.
+
+\section{Numerical Processing in Python}
+\label{datawrangling:section:numpy}
+While Python is a highly effective programming langugage, working with arrays is not easy in native Python. Representing matrices as nested lists are cumbersome. Array operations implemented as for-loops in Python are also very slow by comparison to compiled languages such as C. The NumPy open source extension module addresses this need for efficient numerical processing in Python. At it's core are functions for creating and performing computations on N-dimensional arrays. NumPy, along with the SciPy extension module, provides a large number of useful functions for linear algebra and generating random and commonly used arrays.
+
+\subsection{Creating Arrays}
+By convention, NumPy is imported as the abbreviation \T{np}
+
+\begin{minted}{python}
+In [1]: import numpy as np
+\end{minted}
+
+To create an array from existing data, we simply call the \T{np.array} function:
+
+\begin{minted}{python}
+In [2]: array1 = np.array([1,2,3]) ## 1d array
+
+In [3]: array1
+Out[3]: array([1, 2, 3])
+
+In [4]: array2 = np.array([[1,2,3],[4,5,6],[7,8,9]])
+
+In [5]: array2
+Out[5]:
+array([[1, 2, 3],
+       [4, 5, 6],
+       [7, 8, 9]])
+\end{minted}
+
+Note that when a nested list is given as input, the top level elements are considered rows of the created 2d-array.
+
+We can access the number of dimensions in an arbitrary array using the \T{ndim} attribute:
+\begin{minted}{python}
+In [6]: array1.ndim
+Out[6]: 1
+
+In [7]: array2.ndim
+Out[7]: 2
+\end{minted}
+
+We can examine the size of each dimension using the \T{shape} attribute. The sizes of all the dimensions are returned as a Python tuple:
+
+\begin{minted}{python}
+In [8]: array1.shape
+Out[8]: (3,)
+
+In [9]: array2.shape
+Out[9]: (3, 3)
+\end{minted}
+
+Note that the shape of a 1d-array is still returned as a tuple of one element instead of a scalar.
+
+\subsection{Useful Arrays}
+
+NumPy provides many ways to create commonly used arrays. Another example is creating arrays filled with ones of zeros when given a particular shape:
+
+\begin{minted}{python}
+In [11]: np.ones((3,2))
+Out[11]:
+array([[ 1.,  1.],
+       [ 1.,  1.],
+       [ 1.,  1.]])
+
+In [12]: np.zeros((2, 3))
+Out[12]:
+array([[ 0.,  0.,  0.],
+       [ 0.,  0.,  0.]])
+\end{minted}
+
+Another particularly useful array for linear algebra is the identity matrix:
+
+\begin{minted}{python}
+In [13]: np.eye(3)
+Out[13]:
+array([[ 1.,  0.,  0.],
+       [ 0.,  1.,  0.],
+       [ 0.,  0.,  1.]])
+\end{minted}
+
+Note that due to the special properties of the identity matrix, only the length of the main diagonal need to be specified.
+
+Whether it's testing, simulation, or estimation, one particular useful class of matrices are random matrices. These can be created via the functions in the submodule \T{np.random}.
+
+The \T{randn} function generates iid samples from the standard normal distribution. It takes an arbitrary number of integer arguments representing the sizes of each dimension.
+
+\begin{minted}{python}
+In [17]: np.random.randn(2,3)
+Out[17]:
+array([[ 0.99525944, -2.6746403 , -1.52608687],
+       [ 0.2231837 ,  2.06679368,  0.23518573]])
+\end{minted}
+
+The \T{randint} function generates integer samples from a discrete uniform distribution. It takes low and high parameters that determines the half-open interval \[low, high\) from which the samples are drawn. A third `size' parameter determines the shape of the output array:
+
+\begin{minted}{python}
+In [18]: np.random.randint(0, 10, (2,3))
+Out[18]:
+array([[9, 2, 8],
+       [0, 0, 9]])
+\end{minted}
+
+See \T{numpy.random} for additional details and \T{scipy.random} for generating samples from other commonly used distributions.
+
+
+\subsection{Manipulating Array Data}
+
+When working with arrays, we often want extract parts of an array. NumPy allows us to specify what parts of an array to extract in several different ways. We can select a single element, a single row or column, and sub-matrices using start/end points or a boolean mask of true/false values.
+
+Selecting a single element from an n-dimensional array can be done by supplying the position of the element along each dimension as a comma separated list:
+
+\begin{minted}{python}
+In [19]: mat = np.random.randint(0,1000,(2,3))
+
+In [20]: mat
+Out[20]:
+array([[ 70, 479, 868],
+       [239,  44, 758]])
+
+In [21]: mat[1,2]
+Out[21]: 758
+\end{minted}
+
+A single row or column can be selected using the positions along the respective dimensions.
+
+\begin{minted}{python}
+In [22]: mat[1]
+Out[22]: array([239,  44, 758])
+
+In [23]: mat[:, 0]
+Out[23]: array([ 70, 239])
+\end{minted}
+
+The first example extracted the second row in the matrix while the second example extracted the first column. The colon that appears in the second example denotes that we are selecting all of the elements along a dimension. Note also that both the extract row and column vectors are returned as a 1d-array.
+
+We can select continues slices along any or all dimensions using the \T{:}:
+
+\begin{minted}{python}
+In [24]: mat[1:, :2]
+Out[24]: array([[239,  44]])
+\end{minted}
+
+Here \T{1:} means we are selecting on or after the second row, and \T{:2} means we are selecting every column until (but excluding) the third.
+
+We can use an array of true/false to select values from an array. This is particular useful when selecting based on various comparisons, numerical thresholds, and other more complex predicates. In the following example, we create a random matrix and select only the rows in which the first element is positive:
+
+\begin{minted}{python}
+In [25]: mat = np.random.randn(5, 3)
+
+In [26]: mat
+Out[26]:
+array([[-1.57617974, -0.90363535, -1.59670748],
+       [ 0.74155774, -1.28834281,  0.29728048],
+       [-0.82443881,  1.47904309,  1.46386687],
+       [ 0.80226522,  0.83213799, -0.88520057],
+       [-0.61635793, -1.0234744 ,  0.37441058]])
+
+In [27]: mask = mat[:, 0] > 0
+
+In [28]: mask
+Out[28]: array([False,  True, False,  True, False], dtype=bool)
+
+In [29]: mat[mask]
+Out[29]:
+array([[ 0.74155774, -1.28834281,  0.29728048],
+       [ 0.80226522,  0.83213799, -0.88520057]])
+\end{minted}
+
+In addition to selecting parts of a single array, we can also combine multiple arrays together using \T{np.concatenate}.
+
+\begin{minted}{python}
+In [30]: mat
+Out[30]:
+array([[-1.57617974, -0.90363535, -1.59670748],
+       [ 0.74155774, -1.28834281,  0.29728048],
+       [-0.82443881,  1.47904309,  1.46386687],
+       [ 0.80226522,  0.83213799, -0.88520057],
+       [-0.61635793, -1.0234744 ,  0.37441058]])
+
+In [31]: np.concatenate((mat[:2], mat[2:]))
+Out[31]:
+array([[-1.57617974, -0.90363535, -1.59670748],
+       [ 0.74155774, -1.28834281,  0.29728048],
+       [-0.82443881,  1.47904309,  1.46386687],
+       [ 0.80226522,  0.83213799, -0.88520057],
+       [-0.61635793, -1.0234744 ,  0.37441058]])
+\end{minted}
+
+In the above example, we decomposed the matrix into two distinct pieces and used concatenate to stack the pieces on top of each other. If we wanted to join arrays side-by-side, we would use the `axis' argument to specify the dimension along which the matrices are to be joined:
+
+\begin{minted}{python}
+In [32]: np.concatenate((mat[:, :1], mat[:, 1:]), axis=1)
+Out[32]:
+array([[-1.57617974, -0.90363535, -1.59670748],
+       [ 0.74155774, -1.28834281,  0.29728048],
+       [-0.82443881,  1.47904309,  1.46386687],
+       [ 0.80226522,  0.83213799, -0.88520057],
+       [-0.61635793, -1.0234744 ,  0.37441058]])
+\end{minted}
+
+It is important to note here that the pieces to be concatenated are to be supplied as elements of a tuple (or list) and not as multiple arguments.
+
+\subsection{Array Computations}
+
+Numerical arrays would not be very useful if we could only create, select, and merge them. We also need to perform numerical computations. The simplest of these are the operations +, -, *, /, **, and np.sqrt.
+
+\begin{minted}{python}
+In [33]: np.ones((3,2)) + np.ones((3,2))
+Out[33]:
+array([[ 2.,  2.],
+       [ 2.,  2.],
+       [ 2.,  2.]])
+\end{minted}
+
+It is important to note that the operators *, /, and ** are element-wise operations and not matrix operations.
+
+\begin{minted}{python}
+In [34]: mat
+Out[34]:
+array([[9, 4, 0],
+       [1, 7, 8],
+       [2, 6, 2]])
+
+In [35]: mat * mat
+Out[35]:
+array([[81, 16,  0],
+       [ 1, 49, 64],
+       [ 4, 36,  4]])
+\end{minted}
+
+For the arithmetic operations, the input arguments must have compatible dimensions. What does it mean to have dimensions that are ``compatible''? Clearly, a scalar is compatible with everything. And arrays of the same shape are compatible. But what about 1d and 2d arrays? It turns out that when operating on two arrays, NumPy compares their shapes beginning with the last dimension. As long as all dimensions have equal sizes OR if one of the sizes is 1, then the two arrays are compatible. This means that, for example, a 1d array must have the same number of ``columns'' as a 2d array to be considered compatible.
+
+\begin{minted}{python}
+In [36]: mat
+Out[36]:
+array([[9, 4, 0],
+       [1, 7, 8],
+       [2, 6, 2]])
+
+In [37]: mat * np.array([1,2,3])
+Out[37]:
+array([[ 9,  8,  0],
+       [ 1, 14, 24],
+       [ 2, 12,  6]])
+
+In [38]: mat * np.array([1,2,3,4])
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+<ipython-input-60-5866a4938d97> in <module>()
+----> 1 mat * np.array([1,2,3,4])
+
+ValueError: operands could not be broadcast together with shapes (3,3) (4)
+\end{minted}
+
+In addition to the simple arithmetic operations, NumPy contains many useful aggregations like sum, mean, std, var, skew, kurt, cov, and corrcoef:
+
+\begin{minted}{python}
+In [39]: np.ones(5).sum()
+Out[39]: 5.0
+
+In [40]: np.ones(5).mean()
+Out[40]: 1.0
+\end{minted}
+
+For a 2d matrix, the aggregations are over all elements:
+
+\begin{minted}{python}
+In [41]: mat = np.random.randn(5,3)
+
+In [42]: mat
+Out[42]:
+array([[ 0.34111218,  1.47916821, -0.95031242],
+       [ 0.75088958, -1.29482598,  0.11894655],
+       [-1.40564348, -0.17229768, -1.55487607],
+       [ 2.72018404, -0.90266003, -0.81561824],
+       [ 0.44513177,  0.48063459, -0.26662876]])
+
+In [43]: mat.sum()
+Out[43]: -1.0267957357278756
+\end{minted}
+
+Similar to concatenate, we can use the `axis' argument to only operate over a particular axis. In the following example we compute the column sums of a two dimensional matrix and check that the first element of the return result is the same as if we selected the first column and took the sum over just that column:
+
+\begin{minted}{python}
+In [44]: mat.sum(axis=0)
+Out[44]: array([ 2.85167408, -0.40998088, -3.46848894])
+
+In [45]: mat[:, 0].sum()
+Out[45]: 2.8516740847603685
+\end{minted}
+
+One caveat regarding the NumPy std function is that it computes the population standard deviation by default. To compute the sample standard deviation, specify ``ddof=1''. Of course the ddof parameter can be used to adjust for arbitrary degrees of freedom.
+
+\begin{minted}{python}
+In [46]: arr = np.random.randn(100)
+
+In [47]: arr.std()
+Out[47]: 1.0993766151279043
+
+In [48]: arr.std(ddof=1)
+Out[48]: 1.1049150714152165
+
+In [49]: np.sqrt(((arr - arr.mean())**2).sum() / (len(arr) - 1))
+Out[49]: 1.1049150714152165
+\end{minted}
+
+\subsection{Linear Algebra}
+
+NumPy contains many useful functions for performing vector (1d) and matrix (2d) operations on arrays. The matrix transpose is accessible using the \T{T} property. For a 1d-array, transposition has no effect.
+
+\begin{minted}{python}
+In [55]: mat = np.random.randn(3,2)
+
+In [56]: mat
+Out[56]:
+array([[ 0.05726806,  0.557495  ],
+       [ 0.35141481,  0.55382274],
+       [-0.39154154,  0.54934658]])
+
+In [57]: mat.T
+Out[57]:
+array([[ 0.05726806,  0.35141481, -0.39154154],
+       [ 0.557495  ,  0.55382274,  0.54934658]])
+
+In [58]: v = mat[0]
+
+In [59]: v
+Out[59]: array([ 0.05726806,  0.557495  ])
+
+In [60]: v.T
+Out[60]: array([ 0.05726806,  0.557495  ])
+\end{minted}
+
+Both matrix multiplication and the inner product of vectors can be performed via the function \T{dot}:
+
+\begin{minted}{python}
+In [61]: vec1 = np.array([1,2,3])
+
+In [62]: vec2 = np.array([3,2,1])
+
+In [63]: vec1.dot(vec2)
+Out[63]: 10
+
+In [64]: mat1 = np.vstack([vec1, vec2])
+
+In [65]: mat1
+Out[65]:
+array([[1, 2, 3],
+       [3, 2, 1]])
+
+In [66]: mat1.dot(mat1.T)
+Out[66]:
+array([[14, 10],
+       [10, 14]])
+\end{minted}
+
+Often, when we work with square matrices, especially if they're triangular, we want to extract the elements along their main diagonal and work with it as a one-dimensional vector. This can be done using the \T{np.diag} function:
+
+\begin{minted}{python}
+In [67]: prod
+Out[67]:
+array([[14, 10],
+       [10, 14]])
+
+In [68]: np.diag(prod)
+Out[68]: array([14, 14])
+\end{minted}
+
+One pitfall of the \T{np.diag} is in how it treats 1d vs 2d inputs. As seen above, the function extracts the main diagonal from an input matrix. What happens then if we give it a 1d-array as input?
+
+\begin{minted}{python}
+In [69]: vec = np.diag(prod)
+
+In [70]: vec
+Out[70]: array([14, 14])
+
+In [71]: np.diag(vec)
+Out[71]:
+array([[14,  0],
+       [ 0, 14]])
+\end{minted}
+
+Indeed we see that when given a 1d input array, \T{np.diag} creates a diagonal matrix with the input as the main diagonal and 0s everywhere else.
+
+We have only begun to scratch the surface of NumPy's functionality for numerical processing. See \T{numpy.linalg} and \T{scipy.linalg} for an extensive list of useful linear algebra operations including eigen vector computations, important matrix decompositions, and various other goodies.
+
+\begin{exercise}
+  Create a 1000-by-3 random matrix where each column is sampled respectively from
+   $\calN(10, 9)$, $\calN(-5, 16)$, and  $\calN(3, 4)$
+\end{exercise}
+
+\begin{exercise}
+  What are the realized column mean and sample standard deviations of the matrix from the previous exercise? What about the mean and sample std of the first half of the rows?
+\end{exercise}
+
+\begin{exercise}
+  Create two random 50-by-50 square matrices. Compute the sum-product of the two diagonals.
+\end{exercise}
+
+
+\section{Data Preparation}
+\label{datawrangling:section:dataprep}
+
+\subsection{Pandas Basics}
+Series/DataFrame/Index
+
+\subsection{Cleaning Data}
+Finding/marking/filling missing data
+
+\subsection{Selecting Data}
+Indexing
+
+\subsection{Merging Data}
+join/merge/combine
+
+\subsection{Reshaping Data}
+stack/unstack/melt
+
+\section{Exploratory Data Analysis}
+\label{datawrangling:section:eda}
+
+\subsection{Descriptive Statistics}
+describe/sum/mean/count/corr/cov
+
+\subsection{Data Transformations and Aggregations}
+apply/groupby/agg/transform/
+
+\subsection{Visualization}
+Series/DataFrame.plot
+
+\section{End Notes}
+
+A more extensive learning guide of the programmatic tools available in the scientific Python ecosystem can be found in `Python for Data Analysis' by Wes Mckinney\cite{McKinneyDataAnal}. It covers in more detail tools in NumPy, SciPy, and Pandas. In addition it also contains a number of interesting example case studies.
+
+For a comprehensive reference of the functional APIs in NumPy, SciPy, and Pandas, visit http://docs.scipy.org/doc/ and http://pandas.pydata.org/

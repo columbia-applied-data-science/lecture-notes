@@ -1,0 +1,26 @@
+\chapter{Notation}
+\label{chapter:notation}
+\begin{center}
+%{\Large\textit{A quotation}}
+\end{center}
+\vspace{0.2in}
+
+
+\section{Notation for Structured Data}
+We establish notation here for structured two-dimensional data, that is, data that could be displayed in a spreadsheet or placed in a matrix.  
+
+The most important and possibly confusing distinction in predictive modeling is that between the training set and a new input.  We will use capital letters such as $X$, $Y$ to denote the vectors/matrices of training data, and then lowercase to denote the new data or the model.  For example, we would have the model $y = x\cdot w$.  Then we could observe $N$ $x-y$ pairs.  From this we form the training data sets $X$, $Y$ where the $n^{th}$ row of $X$ is the $n^{th}$ set of covariates, and the $n^{th}$ row of $Y$ is the $n^{th}$ observed output.  This training data is used to find a ``best fit'' $w$, which, given a new input $x$, can be used to predict an output using $\hat y = x\cdot w$.  The $\hat \cdot$ indicates that $\hat y$ is a prediction and not the true output for that trial $y$.  We use the capital letter $E$ to denote error values occurring in the training set e.g. $Y = X w + E$, and the Greek letter $\eps$ to denote a single instance of model error or a new error value concurrent with a prediction, viz. $y = x\cdot w + \eps$.
+
+Suppose we have a data matrix
+\begin{align*}
+  X := \left( 
+  \begin{matrix}
+    X_{11} & \cdots & X_{1K}\\
+    \vdots &   & \vdots\\
+    X_{n1} & \cdots & X_{nK}
+  \end{matrix}
+  \right),
+\end{align*}
+The $n^{th}$ row of $X$ is denoted by $X_{n:}$, and the $k^{th}$ column by $X_{:k}$.  The $:$ denoting ``every element in this dimension.'' 
+
+Notice that, in contrast to some statistics texts, we do not differentiate between random variables and their realizations.  We hope the meaning will be clear from the context.

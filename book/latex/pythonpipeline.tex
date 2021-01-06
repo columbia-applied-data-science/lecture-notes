@@ -1,0 +1,115 @@
+\chapter{Building a Data Cleaning Pipeline with Python}
+\label{chapter:pythonpipeline}
+\begin{center}
+{\Large\textit{A quotation}}
+\end{center}
+\vspace{0.2in}
+
+One of the most useful things you can do with Python is to (quickly) build CLI utilities that look and feel like standard Unix tools.  These utilities can be tied together, using pipes and a shell script, into a \emph{pipeline}.  These can be used for many purposes.  We will concentrate on the task of data cleaning or data preparation.
+
+
+\section{Simple Shell Scripts}
+A pipeline that sorts and cleans data could be put into a shell script that looks like:
+\begin{minted}{bash}
+#!/bin/bash
+
+# Here is a comment
+
+SRC=../src
+DATA=../data
+
+cat $DATA/inputfile.csv \
+    | python $SRC/subsample.py -r 0.1 \
+    | python $SRC/cleandata.py \
+    > $DATA/outputfile.csv
+\end{minted}
+Some points:
+\begin{itemize}
+  \item The \#\T{!/bin/bash} is called a \emph{she-bang} and in this case tells your machine to run this script using the command \T{/bin/bash}.  In other words, let bash run this script.  
+  \item All other lines starting with \# are comments.
+  \item The line \T{SRC=../src} sets a variable, \T{SRC}, to the string \T{../src}.  In this case we are referring to a directory containing our source code.  To access the value stored in this variable, we use \$\T{SRC}.  
+  \item The lines that end with a backslash \textbackslash, are in fact interpreted as one long line with no newlines.  This is done to improve readability.  
+  \item The first couple lines under \T{cat} start with pipes, and the last line is a redirection.  
+  \item The command \T{cat} is used on the first line and the output is piped to the first program.  This is done rather than simply using (as the first line) \T{python \$SRC/subsample.py -r 0.1 \$DATA/inputfile.csv}.  What advantage does this give?  It allows one to easily substitute \T{head} for \T{cat} and have a program that reads only the first 10 lines.  This is useful for debugging.
+\end{itemize}
+
+Why write shell scripts to run you programs?  
+\begin{itemize}
+  \item Shell scripts allow you to tie together any program that reads from stdin and writes to stdout.  This includes all the existing Unix utilities.
+  \item You can (and should) add the shell scripts to your repository.  This keeps a record of how data was generated.
+  \item Anyone who understands Unix will be able to understand how your data was generated.
+  \item If your script pipes together five programs, then all five can run at once.  This is a simple way to parallelize things.
+  \item More complex scripts can be written that can automate this process
+\end{itemize}
+
+\section{Template for a Python CLI Utility}
+Python can be written to work as a filter.  To demonstrate, we write a program that would delete every $n^{th}$ line of a file.
+
+\rule{\textwidth}{2pt}
+\begin{minted}{python}
+from optparse import OptionParser
+import sys
+
+
+def main():
+    r"""
+    DESCRIPTION
+    -----------
+    Deletes every nth line of a file or stdin, starting with the
+    first line, print to stdout.
+
+    EXAMPLES
+    --------
+    Delete every second line of a file
+    python deleter.py -n 2 infile.csv
+    """
+    usage = "usage: %prog [options] dataset"
+    usage += '\n'+main.__doc__
+    parser = OptionParser(usage=usage)
+    parser.add_option(
+        "-n", "--deletion_rate",
+        help="Delete every nth line [default: %default] ",
+        action="store", dest='deletion_rate', type=float, default=2)
+
+    (options, args) = parser.parse_args()
+
+    ### Parse args
+    # Raise an exception if the length of args is greater than 1
+    assert len(args) <= 1
+    infilename = args[0] if args else None
+
+    ## Get the infile
+    if infilename:
+        infile = open(infilename, 'r')
+    else:
+        infile = sys.stdin
+
+    ## Call the function that does the real work
+    delete(infile, sys.stdout, options.deletion_rate)
+
+    ## Close the infile iff not stdin
+    if infilename:
+        infile.close()
+
+
+def delete(infile, outfile, deletion_rate):
+    """
+    Write later, if module interface is needed.
+    """
+    for linenumber, line in enumerate(infile):
+        if linenumber % deletion_rate != 0:
+            outfile.write(line)
+
+
+  
+if __name__=='__main__':
+    main()
+\end{minted}
+\rule{\textwidth}{2pt}
+
+Note that:
+\begin{itemize}
+  \item The \emph{interface} to the external world is inside \T{main()} and the \emph{implementation} is put in a separate function \T{delete()}.  This separation is useful because interfaces and implementations tend to change at different times.  For example, suppose this code was to be placed inside a larger module that no longer read from stdin?
+  \item The \T{OptionParser} module provides lots of useful support for other types of options or flags.
+  \item Other, more useful utilities would do functions such as subsampling, cutting certain columns out of the data, reformatting text, or filling missing values.  See the homework!
+\end{itemize}

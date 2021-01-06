@@ -1,0 +1,158 @@
+\chapter{Version Control with Git}
+\label{chapter:git}
+\begin{center}
+{\Large\textit{Git!  That's the vcs that I have to look at Google to use.\\- Josef Perktold}}
+\end{center}
+\vspace{0.2in}
+
+\section{Background}
+\label{git:whatis_vcs}
+
+The idea of version control is almost as old as writing itself. Authors writing books and manuscripts all needed logical ways to keep track of the various edits they made throughout the writing process.  Version control systems like Git, SVN, Mercurial, or CVS allow you to save different versions of your files, and revert to those earlier versions when necessary.  The most modern of these four systems are Git and Mercurial.  Each of these have many features designed to facilitate working in large groups and keeping track of many versions of files.
+
+\section{What is Git}
+\label{git:whatis_git}
+
+Git is a distributed version control system (DVCS). This means that every user has a complete copy of the repository on their machine.  This is nice, since you don't need an internet connection to check out different versions of your code, or save a new version.  Multiple users still do need some way to share files.  In this class we will use Git along with the website GitHub.  GitHub provides you with a clone of your local repository that is accessible via the internet.  Thus, when you change a file you will \emph{push} those changes to GitHub, and then your teammates will \emph{pull} those changes down to their local machines.
+
+\section{Setting Up}
+\label{git:setting_up}
+For macs, download from \url{mac.github.com}.  For Linux, type \T{sudo apt-get install git}.  After installation, get an account at \url{www.github.com}.  Then, in your home directory create a file (or edit if it already exists) called \T{.gitconfig}.  It should have the lines:
+
+\begin{minted}{bash}
+[user]
+    name = Ian Langmore
+    email = ianlangmore@gmail.com
+[credential]
+    helper = cache --timeout=3600
+[alias]
+        lol = log --graph --decorate --pretty=oneline --abbrev-commit
+        lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+[color]
+        branch = auto
+        diff = auto
+        interactive = auto
+        status = auto
+\end{minted}
+
+Now, when you're in a repository, you can see the project structure by typing \T{git lola}.
+
+\section{Online Materials}
+\label{git:online_materials}
+Lots of materials are available online.  Here we list a few.  Be advised that these tutorials are usually written for experienced developers who are migrating from other systems to Git.  For example, in this class you will not have to use branches.
+
+\begin{itemize}
+  \item \url{http://git-scm.com/book} has complete documentation with examples.  I recommend reading section 1 before proceeding.
+  \item \url{http://osteele.com/posts/2008/05/commit-policies} is a visualization of how to transport data over the multiple layers of Git.
+  \item \url{http://marklodato.github.com/visual-git-guide/index-en.html} provides a more complete visual reference.
+  \item \url{http://learn.github.com} has a number of video tutorials
+  \item \url{http://www.kernel.org/pub/software/scm/git/docs/user-manual.html} is a reference for commands
+\end{itemize}
+
+\section{Basic Git Concepts}
+\label{git:concepts}
+One difficulty that beginners have with Git is understanding that as you are working on a file, there are at least four different versions of it.
+\begin{enumerate}
+  \item The \emph{working-copy} that is saved in your computer's file system.
+  \item The saved version in Git's \emph{index} (a.k.a. \emph{staging area}).  This is where Git keeps the files that will be committed.
+  \item The commit current at your \emph{HEAD}.  Once you commit a file, it (and the other files committed with it) are saved forever.  The commit can be identified by a SHA1 hashtag.  The last commit in the current checked out branch is called HEAD.
+  \item The commit in your \emph{remote repository}.  Once you have pulled down changes from the remote repository, and pushed your changes to it, your repository is identical to the remote.
+\end{enumerate}
+
+
+
+\section{Common Git Workflows}
+\label{git:workflows}
+Here we describe common workflows and the steps needed to execute them.  You can test out the steps here (except the remote steps) by creating a temporary local repository:
+
+\begin{minted}{bash}
+  cd /tmp
+  mkdir repo
+  cd repo
+  git init
+\end{minted}
+After that you will probably want to quickly create a file and add it to the repo.  Do this with
+\begin{minted}{bash}
+  echo 'line1' > file
+  git add file
+\end{minted}
+Practice this (and subsequent subsections) on your own.  Remember to type \T{git lola}, \T{git status}, and \T{git log} frequently to see what is happening.
+
+You can then add other lines with e.g. \T{echo 'line2' >> file}.  When you are done, you can clean up with \T{rm -rf repo}.
+
+To set up a remote repository on GitHub, follow the directions at: \url{https://help.github.com/articles/creating-a-new-repository}.
+
+\subsection{Linear Move from Working to Remote}
+To turn in homework, you have to move files from 1 to 4.  The basic 1-to-4 workflow would be (note that I use \T{<something>} when you must fill in some obvious replacement for the word ``something.''  If the ``something'' is optional I write it in \T{[square brackets]}).
+\begin{itemize}
+  \item {\bf working-copy $\to$ index} \T{git add <file>}.  To see the files that differ in index and commit use \T{git status}.  To see the differences between working and index files, use \T{git diff [<file>]}.
+  \item {\bf index $\to$ HEAD} \T{git commit -m "<message>"}.  To see the files that differ in index and commit use \T{git status}.  To see the differences between your working-copy and the commit, use \T{git diff HEAD [<file>]}.
+  \item {\bf HEAD $\to$ remote-repo} \T{git push [origin master]}.  This means ``push the commits in your master branch to the remote repo named origin.''  Note that \T[origin master] is the default, so it isn't necessary.  This actually pushes all commits to origin, but in particular it pushes HEAD.
+\end{itemize}
+
+You can add and commit at once with \T{git commit -am '<message>'}.  This will add files that have been previously added.  It will not add untracked files (you have to manually add them with \T{git add <file>}).
+
+\subsection{Discarding changes in your working copy}
+You can replace your working copy with the copy in your index using
+\begin{minted}{bash}
+  git checkout <file>
+\end{minted}
+
+You can replace your working copy with the copy in HEAD using
+\begin{minted}{bash}
+  git checkout HEAD <file>
+\end{minted}
+
+\subsection{Erasing changes}
+If you committed something you shouldn't have, and want to completely wipe out the commit:
+\T{git reset --hard HEAD$^\wedge$}.  This moves your commit back in history and wipes out the most recent commit.
+
+To move the index and HEAD back one commit, use \T{git reset HEAD$^\wedge$}.  
+
+To move the index to a certain commit (designated by a SHA1 hash), use \T{git reset <hash>}.
+
+If you then want to move changes into your working copy, use \T{git checkout <filename>}.
+
+To move contents of a particular commit into your working directory, use \T{git checkout <hash> [<filename>]}.
+
+\subsection{Remotes}
+To copy a remote repository, use one of the following
+\begin{minted}{bash}
+  git clone <remote url>
+  git clone <remote url> -b <branchname>
+  git clone <remote url> -b <branchname> <destination>
+\end{minted}
+
+To get changes from a remote repository and put them into your repo/index/working, use \T{git pull}.  You will get an error if you have uncommitted changes in your index or working, so first save your changes, then \T{git add <filename>}, then \T{git commit -m '<message>'}.
+
+To send changes to a remote repository, use 
+\begin{minted}{bash}
+  git add <file>
+  git commit '<message>'
+  git push
+\end{minted}
+
+\subsection{Merge conflicts}
+A typical situation is as follows:
+\begin{enumerate}
+  \item Your teammate modifies \T{<file>}
+  \item Your teammate pushes changes
+  \item You modify \T{<file>}
+  \item You pull with \T{git pull}
+\end{enumerate}
+Git will recognize that you have two versions of the same file that are in ``conflict.''  Git will tell you which files are in conflict.  You can open these files and see something like the following:
+\begin{minted}{bash}
+  <<<<<<< HEAD:filename
+  <My work>
+=======
+  <My teammate's work>
+>>>>>>> iss53:filename
+\end{minted}
+
+The lines above the \T{=======} are the version in the commit you most recently made.  The lines below are those in your teammate's version.  You can do a few things:
+
+\begin{itemize}
+  \item Edit the file, by hand, to get in in the state you want it in.
+  \item Keep your version with \T{git checkout --ours <filename>}
+  \item Keep their version with \T{git checkout --theirs <filename>}
+\end{itemize}

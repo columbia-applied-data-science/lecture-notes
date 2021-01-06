@@ -1,0 +1,159 @@
+\documentclass[11pt,openany]{book}
+%\documentclass[11pt]{memoir}
+\usepackage{amsmath} %Never write a paper without using amsmath for its many new commands 
+\usepackage{amssymb} %Some extra symbols 
+\usepackage{makeidx} %If you want to generate an index, automatically 
+\usepackage{graphicx} %If you want to include postscript graphics 
+\usepackage{amsthm}
+% Added by Ian
+\usepackage{srcltx}
+\usepackage{parskip}
+\usepackage{minted}  % For syntax highlighting of code
+\usepackage{mdframed} % For framed boxes
+\usepackage{algpseudocode}
+% Added by Daniel
+\usepackage{url} %for citing online publication in bib
+\usepackage{listings}
+\usepackage{pdfsync}  %for TexSync
+\synctex=1
+% Special modes
+%\includeonly{preface,unix,pythonpipeline,git,notation,linear} %If you just want to process one section
+\includeonly{nlp}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% bold, bbold, cal, and roman characters
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def \bfd { {\mathbf{d}}}
+\def \bfD { {\mathbf{D}}}
+\def \x { {\mathbf{x}}}  % Cheat and leave out the bf for X, y
+\def \X { {\mathbf{X}}}  % Cheat and leave out the bf for X, y
+\def \y { {\mathbf{y}}}
+\def \bfz { {\mathbf{z}}}
+
+\def \calA {\mathcal{A}}
+\def \calD {\mathcal{D}}
+\def \calF { {\mathcal F}}
+\def \calK {\mathcal{K}}
+\def \calL {\mathcal{L}}
+\def \calM { {\mathcal M}}
+\def \calN { {\mathcal N}}
+\def \calQ {\mathcal{Q}}
+\def \calR {\mathcal{R}}
+\def \calU { \mathcal{U}}
+\def \rmP {\mathrm{P}}
+\def \rmQ { {\mathrm{Q}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% math-mode definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def \as { {\emph{a.s.}}}
+\def \dint { \displaystyle\int}
+
+% differentials
+\def \d { {\,\mbox{d}}}
+\def \dP { {\,\rm{d}\rmP}}
+\def \dPtilde { \,\mbox{d}\tilde{\mbox{P}}}
+\def \dQ { {\,\mbox{dQ}}}
+\def \Pbar { {\overline{\rm{P}}}}
+\def \ds { \,\mbox{d}s}
+\def \dt { \,\mbox{d}t}
+\def \dv { \,\mbox{d}v}
+\def \dw { \, \mbox{d}w}
+\def \dx { \, \mbox{d}x}
+\def \dy { \, \mbox{d}y}
+\def \dz { \,\mbox{d}z}
+
+\def \eps { {\epsilon}}
+\def \g { {\,|\,}}
+\def \iid { {\mbox{i.i.d.}\,}}
+\def \indep { {\perp\!\!\!\perp}}
+\def \one { \mathbf{1}}
+\def \p {\partial}
+
+\def \supp { {\mbox{supp}}}
+\def \trace { {\mbox{Trace}}}
+\def \st {:\,}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% spaces such as R^n 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def \Cn {{\mathbb C}^n}
+\def \Cone {{\mathbb C}}
+\def \dsphere { {\mathbb{S}^{d-1}}}
+\def \nsphere { {\mathbb{S}^{n-1}}}
+\def \Nat {{\mathbb N}}
+\def \pR { {\p R}}
+\def \Rn { {{\mathbb R}^n}}
+\def \Rd { {{\mathbb R}^d}}
+\def \RK {{\mathbb R}^K}
+\def \RN {{\mathbb R}^N}
+\def \RNK {{\mathbb R}^{N\times K}}
+\def \Rm {{\mathbb R}^m}
+\def \Rone {{\mathbb R}}
+\def \Rtwo {{\mathbb R}^2}
+\def \Rthree {{\mathbb R}^3}
+\def \Rp { {\mathbb R}^p}
+\def \Sone {{\mathbb S}}
+\def \Zint {{\mathbb Z}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% operators and commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\HRule}{\noindent\rule{\linewidth}{0.5mm}}
+\newcommand{\Cov}[2]{ \mbox{Cov}\left( #1,#2 \right) } 
+\newcommand{\CovP}[2]{ \mbox{Cov}_\rmP\left( #1,#2 \right) } 
+\newcommand{\Exp}[1]{ \mathbb{E}\left\{ #1 \right\} } 
+\newcommand{\ExpQ}[1]{ \E_Q\left\{ #1 \right\} } 
+\newcommand{\ExpP}[1]{ \E_\mathrm{P}\left\{ #1 \right\} } 
+\newcommand{\ip}[2]{ \langle #1,\,#2 \rangle}   %Mapping is ` i 
+\newcommand{\KL}[2]{ \mbox{KL}[#1 \,||\, #2]}   %Mapping is 
+\newcommand{\mean}[1]{ \langle #1 \rangle}      %Mapping is ` m
+\newcommand{\Var}[1]{ \mbox{Var}\left\{ #1 \right\} } 
+\newcommand{\VarP}[1]{ \mbox{Var}_\mathrm{P}\left\{ #1 \right\} } 
+\newcommand{\T}[1]{ \texttt{#1}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Theorem environments
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\theoremstyle{theorem}
+\newtheorem{theorem}[equation]{Theorem}
+
+\theoremstyle{plain}
+
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}[equation]
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{example}[equation]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[equation]{Remark}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Framed boxes using mdframed package
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mdfdefinestyle{theoremstyle}{%
+  linecolor=red,linewidth=2pt,%
+  frametitlerule=true,%
+  frametitlebackgroundcolor=gray!40,
+  innertopmargin=\topskip,
+}
+
+\definecolor{default}{rgb}{0.95,0.95,0.95}
+
+% Use \begin{digression}, \end{digression} to place a digression
+% Use digression* to turn off numbering
+\mdtheorem[style=theoremstyle]{digression}{Digression}
+
+
+
+
+
+\begin{document} 
+          terminal.eps
+\end{document}
